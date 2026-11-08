@@ -1,0 +1,5 @@
+python3 scripts/generate-tokens.py
+python3 scripts/generate-cfg.py
+gcc -g src/main.c
+#gcc -g -fsanitize=address src/main.c
+./a.out test.cf

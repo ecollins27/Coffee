@@ -1,0 +1,40 @@
+type,assignment_op,unary_assignment_op,add_op,mul_op,rel_op,constant,name,number,string_literal,epsilon,end
+
+program---`action_list `end
+action_list---`statement `action_list $ `function_declaration `action_list $ `epsilon
+
+function_declaration---`type `name ( `param_declarations_opt ) { `action_list }
+param_declarations_opt---`var_declaration `param_declarations_tail_opt $ `epsilon
+param_declarations_tail_opt---`param_declarations_tail_opt , `var_declaration $ `epsilon
+
+statement---`var_declaration ; $ `assignment ; $ `function_call ; $ `if_statement $ `while_statement
+
+var_declaration---`type `name `assignment_opt
+assignment_opt---`assignment_op `expression $ = `expression $ `epsilon
+ref_value---`name $ `ref_value [ `expression ]
+
+expression---`bool_expression $ `arithmetic_expression $ ( `expression )
+
+bool_expression---`and_expression `or_opt
+or_opt---`or_opt || `and_expression $ `epsilon
+and_expression---`not_expression `and_opt
+and_opt---`and_opt && `not_expression $ `epsilon
+not_expression---`bool_value $ ! `bool_value
+bool_value---true $ false $ `arithmetic_expression `rel_op `arithmetic_expression
+
+arithmetic_expression---`mul_expression `add_opt
+add_opt---`add_opt `add_op `mul_expression $ `epsilon
+mul_expression---`arithmetic_value `mul_opt
+mul_opt---`mul_opt `mul_op `arithmetic_value $ `epsilon
+arithmetic_value---`number $ `string_literal $ `ref_value $ `function_call
+
+assignment---`ref_value `assignment_op `expression $ `ref_value `unary_assignment_op $ `ref_value = `expression
+
+function_call---`name ( `params_opt )
+params_opt---`expression `params_tail_opt $ `epsilon
+params_tail_opt---`params_tail_opt , `expression $ `epsilon
+
+if_statement---if ( `expression ) { `action_list } `else_opt
+else_opt---else { `action_list } $ `epsilon
+
+while_statement---while ( `expression ) { `action_list }

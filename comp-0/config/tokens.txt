@@ -1,0 +1,7 @@
+type int float bool string void
+assignment_op += -= *= /=
+unary_assignment_op ++ --
+add_op + -
+mul_op * / %
+rel_op < > == >= <=
+constant = , ; ( ) [ ] { } * if else while for struct true false && || !
