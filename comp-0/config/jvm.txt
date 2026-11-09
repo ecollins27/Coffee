@@ -1,2 +1,166 @@
 program_0:
-gen
+    {{generate local_0}}
+
+action_list_0:
+    {{generate local_0}}
+    {{generate local_1}}
+
+action_list_1:
+    {{generate local_0}}
+    {{generate local_1}}
+
+action_list_2:
+    {{generate local_0}}
+    {{generate local_1}}
+
+function_declaration_0:
+    FUNCTION_{{function_id local_1}}:
+    {{generate local_3}}
+    {{jvm_raw_type local_0}}
+
+statement_0:
+    {{generate local_0}}
+
+statement_1:
+    {{generate local_0}}
+
+statement_2:
+    {{generate local_0}}
+
+statement_3:
+    {{generate local_0}}
+
+statement_4:
+    {{generate local_0}}
+
+var_declaration_0:
+
+var_declaration_1:
+    {{generate local_2}}
+    {{jvm_type local_1}}store {{index local_1}}
+
+expression_0:
+    {{generate local_0}}
+
+expression_1:
+    {{generate local_0}}
+
+expression_2:
+    {{generate local_0}}
+
+bool_expression_0:
+    {{generate local_0}}
+
+bool_expression_1:
+    {{generate local_0}}
+    {{generate local_1}}
+    ior
+
+and_expression_0:
+    {{generate local_0}}
+
+and_expression_1:
+    {{generate local_0}}
+    {{generate local_1}}
+    ior
+
+not_expression_0:
+    {{generate local_0}}
+
+not_expression_1:
+    {{generate local_0}}
+    iconst_1
+    ixor
+
+bool_value_0:
+    iconst_0
+
+bool_value_1:
+    iconst_1
+
+bool_value_2:
+    {{cache-counter true_counter}}
+    {{cache-counter end_counter}}
+    {{generate local_0}}
+    {{generate local_2}}
+    if_i{{jvm_rel local_1}} TRUE_{{var true_counter}}
+    iconst_0
+    goto END_{{var end_counter}}
+    TRUE_{{var true_counter}}:
+    iconst_1
+    END_{{var end_counter}}:
+
+arithmetic_expression_0:
+    {{generate local_0}}
+
+arithmetic_expression_1:
+    {{generate local_0}}
+    {{generate local_2}}
+    {{jvm_type local_0}}{{jvm_arith local_1}}
+
+mul_expression_0:
+    {{generate local_0}}
+
+mul_expression_1:
+    {{generate local_0}}
+    {{generate local_1}}
+    {{jvm_type local_0}}{{jvm_arith local_1}}
+
+type_conversion_0:
+    {{generate local_0}}
+    {{convert local_1 local_2}}
+
+arithmetic_value_0:
+    ldc2_w {{value local_0}}
+
+arithmetic_value_1:
+    ldc2_w {{value local_0}}
+
+arithmetic_value_2:
+    ldc {{value local_0}}
+
+arithmetic_value_3:
+    {{jvm_type local_0}}load {{index local_0}}
+
+arithmetic_value_4:
+    {{generate local_0}}
+
+assignment_0:
+    {{generate local_1}}
+    {{jvm_type local_0}}store {{index local_0}}
+
+assignment_1:
+    {{jvm_type local_0}}load {{index local_0}}
+    {{generate local_2}}
+    {{jvm_arith local_1}}
+    {{jvm_type local_0}}store {{index local_0}}
+
+assignment_2:
+    {{jvm_type local_0}}load {{index local_0}}
+    {{jvm_type local_0}}const_1
+    {{jvm_arith local_1}}
+    {{jvm_type local_0}}store {{index local_0}}
+
+if_statement_0:
+    {{cache-counter true_counter}}
+    {{cache-counter end_counter}}
+    {{generate local_0}}
+    iconst_1
+    if_{{jvm_type local_0}}cmpeq TRUE_{{var true_counter}}
+    {{generate local_2}}
+    goto END_{{var end_counter}}
+    TRUE_{{var true_counter}}:
+    {{generate local_1}}
+    END_{{var end_counter}}:
+
+else_opt_0:
+    {{generate local_0}}
+
+while_statement_0:
+    {{cache-counter block_counter}}
+    {{cache-counter end_counter}}
+    if_{{jvm_type local_0}}cmpeq BLOCK_{{var block_counter}}
+    goto END_{{var end_counter}}
+    BLOCK_{{var block_counter}}:
+    {{generate local_1}}
+    END_{{var end_counter}:}

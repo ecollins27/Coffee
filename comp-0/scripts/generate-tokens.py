@@ -24,25 +24,27 @@ for i, line in enumerate(tokens):
 """
 c_content += f"""        case {len(tokens)}: // VARIABLE/METHOD NAMES
             return is_name(str, length);
-        case {len(tokens) + 1}: // NUMBERS
+        case {len(tokens) + 1}: // INTEGERS
+            return is_integer(str, length, 0);
+        case {len(tokens) + 2}: // FLOATS
             return is_number(str, length, 0);
-        case {len(tokens) + 2}: // STRINGS
+        case {len(tokens) + 3}: // STRINGS
             return is_valid_string(str, length);
         default:
             return 0;
     }}
 }}
 
-#define NUM_TOKEN_TYPES {len(tokens) + 4}
+#define NUM_TOKEN_TYPES {len(tokens) + 5}
 """
 type_names = [f"{line[0]}" for line in tokens]
-c_content += f"char* type_names[NUM_TOKEN_TYPES] = {{{','.join(type_names)},\"name\",\"number\",\"string_literal\",\"end\"}};"
+c_content += f"char* type_names[NUM_TOKEN_TYPES] = {{{','.join(type_names)},\"name\",\"int_literal\",\"float_literal\",\"string_literal\",\"end\"}};"
 with open('src/tokens.c', 'w') as f:
     f.write(c_content)
 with open('config/cfg.txt', 'r') as f:
     lines = f.read().split('\n')
     type_line = ','.join([type_name[1:-1] for type_name in type_names])
-    type_line += ",name,number,string_literal,epsilon,end"
+    type_line += ",name,int_literal,float_literal,string_literal,epsilon,end"
     lines[0] = type_line
 with open('config/cfg.txt', 'w') as f:
     f.write('\n'.join(lines))

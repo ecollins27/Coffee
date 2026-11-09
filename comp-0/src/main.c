@@ -47,7 +47,8 @@ int main(int argc, char** argv){
 
 /*
 TODO:
-    - Implement a way to determine local variable storage index
-    - Include params when creating function structs
+    - Track prod_index
+    - Add type detection to validator
+    - Implement type conversion when necessary
     - Implement generator
 */

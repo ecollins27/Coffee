@@ -4,6 +4,7 @@
 struct Variable {
     char* name;
     int id;
+    int index;
     int scope;
     int active;
 };
@@ -16,7 +17,6 @@ struct Variable_Linked_List {
 
 struct Function {
     char* name;
-    int num_params;
     struct Variable_Linked_List* params;
     int id;
     int scope;
@@ -27,6 +27,11 @@ struct Function_Linked_List {
     struct Function* value;
     struct Function_Linked_List* next;
     struct Function_Linked_List* prev;
+};
+
+struct Type {
+    char* type;
+    struct Type* sub_type;
 };
 
 int contains_variable(struct Variable_Linked_List* variables, char* name, int scope){
@@ -53,7 +58,24 @@ int contains_function(struct Function_Linked_List* functions, char* name, int sc
     return 0;
 }
 
-void add_variable(struct Variable_Linked_List** variables,  char* name, int scope){
+int get_available_index(struct Variable_Linked_List* variables, int scope){
+    if (variables == NULL){
+        return 0;
+    }
+    while (variables->prev != NULL){
+        variables = variables->prev;
+    }
+    int index = 0;
+    while (variables->next != NULL){
+        if (variables->value->scope <= scope && variables->value->active){
+            index++;
+        }
+        variables = variables->next;
+    }
+    return index;
+}
+
+int add_variable(struct Variable_Linked_List** variables,  char* name, int scope){
     struct Variable* variable = (struct Variable*)malloc(sizeof(struct Variable));
     variable->name = name;
     if (*variables == NULL){
@@ -63,6 +85,7 @@ void add_variable(struct Variable_Linked_List** variables,  char* name, int scop
     }
     variable->scope = scope;
     variable->active = 1;
+    variable->index = get_available_index(*variables, scope);
     struct Variable_Linked_List* linked_list = (struct Variable_Linked_List*)malloc(sizeof(struct Variable_Linked_List));
     linked_list->value = variable;
     linked_list->prev = *variables;
@@ -70,9 +93,10 @@ void add_variable(struct Variable_Linked_List** variables,  char* name, int scop
         (*variables)->next = linked_list;
     }
     *variables = linked_list;
+    return variable->id;
 }
 
-void add_function(struct Function_Linked_List** functions, char* name, int scope){
+int add_function(struct Function_Linked_List** functions, char* name, int scope, struct Variable_Linked_List* params){
     struct Function* function = (struct Function*)malloc(sizeof(struct Function));
     function->name = name;
     if (*functions == NULL){
@@ -82,6 +106,7 @@ void add_function(struct Function_Linked_List** functions, char* name, int scope
     }
     function->scope = scope;
     function->active = 1;
+    function->params = params;
     struct Function_Linked_List* linked_list = (struct Function_Linked_List*)malloc(sizeof(struct Function_Linked_List));
     linked_list->value = function;
     linked_list->prev = *functions;
@@ -89,6 +114,7 @@ void add_function(struct Function_Linked_List** functions, char* name, int scope
         (*functions)->next = linked_list;
     }
     *functions = linked_list;
+    return function->id;
 }
 
 void deactivate_variables(struct Variable_Linked_List* variables, int scope){
@@ -113,6 +139,27 @@ void deactivate_functions(struct Function_Linked_List* functions, int scope){
     }
 }
 
+void add_params(struct Variable_Linked_List* variables, struct Variable_Linked_List** params, int scope){
+    if (variables == NULL){
+        return;
+    }
+    while (variables->prev != NULL){
+        variables = variables->prev;
+    }
+    while (variables != NULL){
+        if (variables->value->scope == scope && variables->value->active){
+            struct Variable_Linked_List* linked_list = (struct Variable_Linked_List*)malloc(sizeof(struct Variable_Linked_List));
+            linked_list->value = variables->value;
+            linked_list->prev = *params;
+            if (*params != NULL){
+                (*params)->next = linked_list;
+            }
+            *params = linked_list;
+        }
+        variables = variables->next;
+    }
+}
+
 void validate_ast_scope(struct SAST_Node* node, int scope, struct Variable_Linked_List** variables, struct Function_Linked_List** functions){
     if (node == NULL){
         return;
@@ -129,7 +176,8 @@ void validate_ast_scope(struct SAST_Node* node, int scope, struct Variable_Linke
                 exit(0);
             }
             validate_ast_scope(child->children[2], scope, variables, functions);
-            add_variable(variables, name, scope);
+            int id = add_variable(variables, name, scope);
+            ((struct Token*)(child->children[1]))->data = id;
         } else if (equals(child->name, "function_declaration")){
             char* name = ((struct Token*)(child->children[1]))->token;
             if (contains_function(*functions, name, scope)){
@@ -137,7 +185,10 @@ void validate_ast_scope(struct SAST_Node* node, int scope, struct Variable_Linke
                 exit(0);
             }
             validate_ast_scope(child->children[2], scope + 1, variables, functions);
-            add_function(functions, name, scope);
+            struct Variable_Linked_List* params = NULL;
+            add_params(*variables, &params, scope + 1);
+            int id = add_function(functions, name, scope, params);
+            ((struct Token*)(child->children[1]))->data = id;
             validate_ast_scope(child->children[3], scope + 1, variables, functions);
             deactivate_variables(*variables, scope);
             deactivate_functions(*functions, scope);

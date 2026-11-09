@@ -3,6 +3,7 @@
 struct Token {
     char* token;
     int type;
+    int data;
 };
 
 void print_token(struct Token* token){

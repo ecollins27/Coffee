@@ -6,6 +6,7 @@ struct SAST_Node {
     void** children;
     char* is_token;
     struct SAST_Node* parent;
+
 };
 
 void print_full_simple_tree(struct SAST_Node* node, int depth){

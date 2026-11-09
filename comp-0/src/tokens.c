@@ -72,14 +72,16 @@ int is_token_type(char* str, int length, int token_type){
             return 0;
         case 7: // VARIABLE/METHOD NAMES
             return is_name(str, length);
-        case 8: // NUMBERS
+        case 8: // INTEGERS
+            return is_integer(str, length, 0);
+        case 9: // FLOATS
             return is_number(str, length, 0);
-        case 9: // STRINGS
+        case 10: // STRINGS
             return is_valid_string(str, length);
         default:
             return 0;
     }
 }
 
-#define NUM_TOKEN_TYPES 11
-char* type_names[NUM_TOKEN_TYPES] = {"type","assignment_op","unary_assignment_op","add_op","mul_op","rel_op","constant","name","number","string_literal","end"};
+#define NUM_TOKEN_TYPES 12
+char* type_names[NUM_TOKEN_TYPES] = {"type","assignment_op","unary_assignment_op","add_op","mul_op","rel_op","constant","name","int_literal","float_literal","string_literal","end"};
