@@ -7,8 +7,8 @@ int get_length(char* str){
 }
 
 int is_token_type(char* str, int length, int token_type){
-    switch (token_type){        case 0: // "TYPE"
-            char* tokens_0[5] = {"int","float","bool","string","void"};
+    switch (token_type){        case 0: // "RAW_TYPE"
+            char* tokens_0[5] = {"int","long","float","double","void"};
             for (int i = 0; i < 5; i++){
                 int t_length = get_length(tokens_0[i]);
                 if (length >= t_length && equals_l(tokens_0[i], str, length)){
@@ -53,8 +53,8 @@ int is_token_type(char* str, int length, int token_type){
             }
             return 0;
         case 5: // "REL_OP"
-            char* tokens_5[5] = {"<",">","==",">=","<="};
-            for (int i = 0; i < 5; i++){
+            char* tokens_5[6] = {"<",">","==",">=","<=","!="};
+            for (int i = 0; i < 6; i++){
                 int t_length = get_length(tokens_5[i]);
                 if (length >= t_length && equals_l(tokens_5[i], str, length)){
                     return 1;
@@ -62,8 +62,8 @@ int is_token_type(char* str, int length, int token_type){
             }
             return 0;
         case 6: // "CONSTANT"
-            char* tokens_6[20] = {"=",",",";","(",")","[","]","{","}","*","if","else","while","for","struct","true","false","&&","||","!"};
-            for (int i = 0; i < 20; i++){
+            char* tokens_6[21] = {"=",",",";","(",")","[","]","{","}","*","if","else","while","for","struct","true","false","return","&&","||","!"};
+            for (int i = 0; i < 21; i++){
                 int t_length = get_length(tokens_6[i]);
                 if (length >= t_length && equals_l(tokens_6[i], str, length)){
                     return 1;
@@ -84,4 +84,4 @@ int is_token_type(char* str, int length, int token_type){
 }
 
 #define NUM_TOKEN_TYPES 12
-char* type_names[NUM_TOKEN_TYPES] = {"type","assignment_op","unary_assignment_op","add_op","mul_op","rel_op","constant","name","int_literal","float_literal","string_literal","end"};
+char* type_names[NUM_TOKEN_TYPES] = {"raw_type","assignment_op","unary_assignment_op","add_op","mul_op","rel_op","constant","name","int_literal","float_literal","string_literal","end"};

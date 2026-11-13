@@ -1,15 +1,4 @@
-int c = 0;
-if (c == 1){
-
-    void foo(int a, int b){
-        b = 3;
-        c = 2;
-    }
-    void bar(int a, int b){
-        c = -1;
-    }
-    int a = 1;
-    int b = 2;
-    foo(a, b);
-    bar(a, b);
+void main(){
+    int a = 3;
+    print(a);
 }

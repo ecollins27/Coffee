@@ -9,14 +9,19 @@ action_list_1:
     {{generate local_0}}
     {{generate local_1}}
 
-action_list_2:
+statement_list_0:
     {{generate local_0}}
     {{generate local_1}}
 
 function_declaration_0:
     FUNCTION_{{function_id local_1}}:
     {{generate local_3}}
-    {{jvm_raw_type local_0}}
+    return
+
+function_declaration_1:
+    FUNCTION_{{function_id local_1}}:
+    {{generate local_2}}
+    return
 
 statement_0:
     {{generate local_0}}
@@ -33,11 +38,18 @@ statement_3:
 statement_4:
     {{generate local_0}}
 
+statement_5:
+    {{generate local_0}}
+    {{jvm_type local_0}}return
+
+statement_6:
+    return
+
 var_declaration_0:
 
 var_declaration_1:
     {{generate local_2}}
-    {{jvm_type local_1}}store {{index local_1}}
+    {{jvm_var_type local_1}}store {{index local_1}}
 
 expression_0:
     {{generate local_0}}
@@ -47,6 +59,11 @@ expression_1:
 
 expression_2:
     {{generate local_0}}
+
+expression_3:
+    {{generate local_0}}
+    {{generate local_1}}
+    {{jvm_type local_0}}aload
 
 bool_expression_0:
     {{generate local_0}}
@@ -111,42 +128,60 @@ type_conversion_0:
     {{convert local_1 local_2}}
 
 arithmetic_value_0:
-    ldc2_w {{value local_0}}
+    ldc {{value local_0}}
 
 arithmetic_value_1:
-    ldc2_w {{value local_0}}
+    ldc {{value local_0}}
 
 arithmetic_value_2:
     ldc {{value local_0}}
 
 arithmetic_value_3:
-    {{jvm_type local_0}}load {{index local_0}}
+    {{generate local_1}}
+    newarray {{jvm_raw_type local_0}}
 
 arithmetic_value_4:
+    {{jvm_var_type local_0}}load {{index local_0}}
+
+arithmetic_value_5:
     {{generate local_0}}
 
 assignment_0:
     {{generate local_1}}
-    {{jvm_type local_0}}store {{index local_0}}
+    {{jvm_var_type local_0}}store {{index local_0}}
 
 assignment_1:
-    {{jvm_type local_0}}load {{index local_0}}
+    {{jvm_var_type local_0}}load {{index local_0}}
     {{generate local_2}}
     {{jvm_arith local_1}}
-    {{jvm_type local_0}}store {{index local_0}}
+    {{jvm_var_type local_0}}store {{index local_0}}
 
 assignment_2:
-    {{jvm_type local_0}}load {{index local_0}}
-    {{jvm_type local_0}}const_1
+    {{jvm_var_type local_0}}load {{index local_0}}
+    {{jvm_var_type local_0}}const_1
     {{jvm_arith local_1}}
-    {{jvm_type local_0}}store {{index local_0}}
+    {{jvm_var_type local_0}}store {{index local_0}}
+
+function_call_0:
+    {{generate local_1}}
+    invokestatic {{signature local_0}}
+
+function_call_1:
+    invokestatic {{signature local_0}}
+
+params_0:
+    {{generate local_0}}
+    {{generate local_1}}
+
+params_1:
+    {{generate local_0}}
 
 if_statement_0:
     {{cache-counter true_counter}}
     {{cache-counter end_counter}}
     {{generate local_0}}
-    iconst_1
-    if_{{jvm_type local_0}}cmpeq TRUE_{{var true_counter}}
+    iconst_0
+    if_{{jvm_type local_0}}cmpgt TRUE_{{var true_counter}}
     {{generate local_2}}
     goto END_{{var end_counter}}
     TRUE_{{var true_counter}}:
@@ -163,4 +198,4 @@ while_statement_0:
     goto END_{{var end_counter}}
     BLOCK_{{var block_counter}}:
     {{generate local_1}}
-    END_{{var end_counter}:}
+    END_{{var end_counter}}:

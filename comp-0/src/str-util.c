@@ -71,7 +71,7 @@ int is_number(char* str, int length, int require_positive){
     }
     for (int i = 0; i < length; i++){
         if (str[i] == '.'){
-            return is_number(&str[i + 1], length - i, 1);
+            return is_number(&str[i + 1], length - i - 1, 1) || str[i + 1] == '\0';
         } else if (!is_numeric(str[i])){
             return 0;
         }

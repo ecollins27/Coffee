@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "validator.c"
+#include "generator.c"
 
 char* read_file(char* filename){
     FILE *file = fopen(filename, "rb");
@@ -40,15 +40,15 @@ int main(int argc, char** argv){
     char* file_contents = read_file(argv[1]);
     struct AST_Node* node = parse_ast(read_file(argv[1]));
     struct SAST_Node* simp_node = simplify(node);
-    validate_ast(simp_node);
+    struct Variable_Linked_List* variables = NULL;
+    struct Function_Linked_List* functions = NULL;
+    validate(simp_node, &variables, &functions);
+    generate_code("test.j", simp_node, variables, functions);
     free(file_contents);
     return 0;
 }
 
 /*
 TODO:
-    - Track prod_index
-    - Add type detection to validator
-    - Implement type conversion when necessary
-    - Implement generator
+    - Implement predefined functions such as print
 */

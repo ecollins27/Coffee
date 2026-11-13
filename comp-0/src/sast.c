@@ -1,12 +1,13 @@
 #include "ast.c"
 
 struct SAST_Node {
+    int prod_index[2];
     char* name;
     int num_children;
     void** children;
     char* is_token;
     struct SAST_Node* parent;
-
+    struct Type* type;
 };
 
 void print_full_simple_tree(struct SAST_Node* node, int depth){
@@ -51,6 +52,9 @@ struct SAST_Node* simplify(struct AST_Node* ast){
     node->num_children = num_children;
     node->children = malloc(num_children * sizeof(void*));
     node->is_token = (char*)malloc(num_children * sizeof(char));
+    node->prod_index[0] = ast->prod_index[0];
+    node->prod_index[1] = ast->prod_index[1];
+    node->type = NULL;
     int counter = 0;
     for (int i = 0; i < prod_length; i++){
         if (production[i][0] == '`'){

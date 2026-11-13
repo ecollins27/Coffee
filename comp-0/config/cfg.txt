@@ -1,16 +1,20 @@
-type,assignment_op,unary_assignment_op,add_op,mul_op,rel_op,constant,name,int_literal,float_literal,string_literal,epsilon,end
+raw_type,assignment_op,unary_assignment_op,add_op,mul_op,rel_op,constant,name,int_literal,float_literal,string_literal,epsilon,end
 
 program---`action_list `end
-action_list---`statement `action_list $ `function_declaration `action_list $ `epsilon
+action_list---`function_declaration `action_list $ `epsilon
 
-function_declaration---`type `name ( `param_declarations ) { `action_list } $ `type `name ( ) { `action_list }
+statement_list---`statement `statement_list $ `epsilon
+
+function_declaration---`type `name ( `param_declarations ) { `statement_list } $ `type `name ( ) { `statement_list }
 param_declarations---`var_declaration , `param_declarations $ `var_declaration
 
-statement---`var_declaration ; $ `assignment ; $ `function_call ; $ `if_statement $ `while_statement
+type---`raw_type $ `type * $ `type [ ]
+
+statement---`var_declaration ; $ `assignment ; $ `function_call ; $ `if_statement $ `while_statement  $ return `expression ; $ return ;
 
 var_declaration---`type `name $ `type `name = `expression
 
-expression---`bool_expression $ `arithmetic_expression $ ( `expression )
+expression---`bool_expression $ `arithmetic_expression $ ( `expression ) $ `expression [ `expression ]
 
 bool_expression---`and_expression $ `and_expression || `bool_expression
 and_expression---`not_expression $ `not_expression && `and_expression
@@ -19,7 +23,7 @@ bool_value---false $ true $ `arithmetic_expression `rel_op `arithmetic_expressio
 
 arithmetic_expression---`mul_expression $ `mul_expression `add_op `arithmetic_expression 
 mul_expression---`arithmetic_value $ `arithmetic_value `mul_op `mul_expression
-arithmetic_value---`int_literal $ `float_literal $ `string_literal $ `name $ `function_call
+arithmetic_value---`int_literal $ `float_literal $ `string_literal $ `type [ `expression ] $ `name $ `function_call
 
 assignment---`name = `expression $ `name `assignment_op `expression $ `name `unary_assignment_op
 
